@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import mongoose from 'mongoose';
 import Migration from '../models/migration.model.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -196,6 +197,31 @@ export const getMigrationStatus = async () => {
         };
     } catch (error) {
         console.error('❌ Lỗi khi lấy trạng thái migration:', error.message);
+        throw error;
+    }
+};
+
+export const resetDatabase = async () => {
+    try {
+        console.log('🔄 Đang reset database...');
+
+        // Drop collections
+        const collections = ['products', 'users', 'carts', 'migrations'];
+        for (const col of collections) {
+            try {
+                await mongoose.connection.db.dropCollection(col);
+                console.log(`✅ Dropped collection: ${col}`);
+            } catch (e) {
+                console.log(`⚠️ Collection ${col} không tồn tại hoặc lỗi: ${e.message}`);
+            }
+        }
+
+        // Chạy migrations
+        await runMigrations();
+
+        console.log('🎉 Reset database thành công!');
+    } catch (error) {
+        console.error('❌ Lỗi khi reset database:', error.message);
         throw error;
     }
 };
