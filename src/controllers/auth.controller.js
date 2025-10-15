@@ -60,4 +60,15 @@ const login = async (req, res) => {
     }
 };
 
-export { register, login };
+const getMe = async (req, res) => {
+    try {
+        // authenticate middleware should attach user to req
+        const user = req.user;
+        if (!user) return res.status(401).json({ success: false, message: 'Unauthorized' });
+        res.json({ success: true, data: user });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Server error', error: error.message });
+    }
+};
+
+export { register, login, getMe };

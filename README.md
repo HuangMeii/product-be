@@ -79,12 +79,9 @@ npm run migrate:status
 - **Query Parameters:**
   - `page` (optional): Số trang (mặc định: 1)
   - `limit` (optional): Số sản phẩm mỗi trang (mặc định: 10)
-  - `category` (optional): Lọc theo danh mục
   - `search` (optional): Tìm kiếm theo tên sản phẩm
 
 **Ví dụ:**
-```
-GET /api/products?page=1&limit=5&category=electronics&search=laptop
 ```
 
 ### 2. Lấy sản phẩm theo ID
@@ -98,7 +95,6 @@ GET /api/products?page=1&limit=5&category=electronics&search=laptop
   "name": "iPhone 15",
   "description": "Điện thoại thông minh cao cấp",
   "price": 25000000,
-  "category": "electronics",
   "stock": 100,
   "image": "https://example.com/image.jpg"
 }
@@ -124,7 +120,6 @@ GET /api/products?page=1&limit=5&category=electronics&search=laptop
   name: String (required, max: 100 chars),
   description: String (max: 500 chars),
   price: Number (required, min: 0),
-  category: String (required),
   stock: Number (required, min: 0, default: 0),
   image: String,
   isActive: Boolean (default: true),

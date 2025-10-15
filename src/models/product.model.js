@@ -18,11 +18,6 @@ const productSchema = new mongoose.Schema(
             required: [true, 'Giá sản phẩm là bắt buộc'],
             min: [0, 'Giá sản phẩm phải lớn hơn hoặc bằng 0'],
         },
-        category: {
-            type: String,
-            required: [true, 'Danh mục sản phẩm là bắt buộc'],
-            trim: true,
-        },
         stock: {
             type: Number,
             required: [true, 'Số lượng tồn kho là bắt buộc'],
@@ -45,6 +40,5 @@ const productSchema = new mongoose.Schema(
 
 // Index để tìm kiếm nhanh hơn
 productSchema.index({ name: 1 });
-productSchema.index({ category: 1 });
 
 export default mongoose.model('Product', productSchema);

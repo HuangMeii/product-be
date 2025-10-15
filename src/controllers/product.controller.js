@@ -3,13 +3,8 @@ import Product from '../models/product.model.js';
 // Lấy tất cả sản phẩm
 const getAllProducts = async (req, res) => {
     try {
-        const { page = 1, limit = 10, category, search } = req.query;
+        const { page = 1, limit = 10, search } = req.query;
         const filter = {};
-
-        // Lọc theo danh mục
-        if (category) {
-            filter.category = category;
-        }
 
         // Tìm kiếm theo tên
         if (search) {
