@@ -85,11 +85,13 @@ import productRoutes from './src/routes/product.routes.js';
 import migrationRoutes from './src/routes/migration.routes.js';
 import authRoutes from './src/routes/auth.routes.js';
 import cartRoutes from './src/routes/cart.routes.js';
+import userRoutes from './src/routes/user.routes.js';
 
 app.use('/api/products', productRoutes);
 app.use('/api/migrations', migrationRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/cart', cartRoutes);
+app.use('/api/users', userRoutes);
 
 // Error Middleware
 app.use(notFound);

@@ -16,11 +16,11 @@ router.get('/', getAllProducts);
 // GET /api/products/:id - Lấy sản phẩm theo ID
 router.get('/:id', getProductById);
 
-// POST /api/products - Tạo sản phẩm mới (có thể thêm auth nếu cần)
-router.post('/', createProduct);
+// POST /api/products - Tạo sản phẩm mới (chỉ admin)
+router.post('/', authenticate, authorizeRole('admin'), createProduct);
 
-// PUT /api/products/:id - Cập nhật sản phẩm
-router.put('/:id', updateProduct);
+// PUT /api/products/:id - Cập nhật sản phẩm (chỉ admin)
+router.put('/:id', authenticate, authorizeRole('admin'), updateProduct);
 
 // DELETE /api/products/:id - Xóa sản phẩm (chỉ admin)
 router.delete('/:id', authenticate, authorizeRole('admin'), deleteProduct);
