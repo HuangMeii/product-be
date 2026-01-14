@@ -14,12 +14,16 @@ const register = async (req, res) => {
         const { name, email, password, role } = req.body;
 
         if (!name || !email || !password) {
-            return res.status(400).json({ success: false, message: 'Missing required fields' });
+            return res
+                .status(400)
+                .json({ success: false, message: 'Missing required fields' });
         }
 
         const existing = await User.findOne({ email });
         if (existing) {
-            return res.status(400).json({ success: false, message: 'Email already in use' });
+            return res
+                .status(400)
+                .json({ success: false, message: 'Email already in use' });
         }
 
         const hashed = bcrypt.hashSync(password, 10);
@@ -28,9 +32,24 @@ const register = async (req, res) => {
 
         const token = generateToken(user);
 
-        res.status(201).json({ success: true, data: { user: { id: user._id, name: user.name, email: user.email, role: user.role }, token } });
+        res.status(201).json({
+            success: true,
+            result: {
+                user: {
+                    id: user._id,
+                    name: user.name,
+                    email: user.email,
+                    role: user.role,
+                },
+                token,
+            },
+        });
     } catch (error) {
-        res.status(500).json({ success: false, message: 'Server error', error: error.message });
+        res.status(500).json({
+            success: false,
+            message: 'Server error',
+            error: error.message,
+        });
     }
 };
 
@@ -39,36 +58,69 @@ const login = async (req, res) => {
         const { email, password } = req.body;
 
         if (!email || !password) {
-            return res.status(400).json({ success: false, message: 'Missing email or password' });
+            return res
+                .status(400)
+                .json({ success: false, message: 'Missing email or password' });
         }
 
         const user = await User.findOne({ email });
         if (!user) {
-            return res.status(401).json({ success: false, message: 'Invalid credentials' });
+            return res
+                .status(401)
+                .json({ success: false, message: 'Invalid credentials' });
         }
 
         const match = bcrypt.compareSync(password, user.password);
         if (!match) {
-            return res.status(401).json({ success: false, message: 'Invalid credentials' });
+            return res
+                .status(401)
+                .json({ success: false, message: 'Invalid credentials' });
         }
 
         const token = generateToken(user);
 
-        res.json({ success: true, data: { user: { id: user._id, name: user.name, email: user.email, role: user.role }, token } });
+        res.json({
+            success: true,
+            result: {
+                user: {
+                    id: user._id,
+                    name: user.name,
+                    email: user.email,
+                    role: user.role,
+                },
+                token,
+            },
+        });
     } catch (error) {
-        res.status(500).json({ success: false, message: 'Server error', error: error.message });
+        res.status(500).json({
+            success: false,
+            message: 'Server error',
+            error: error.message,
+        });
     }
 };
 
-const getMe = async (req, res) => {
+const checkAuth = async (req, res) => {
     try {
-        // authenticate middleware should attach user to req
         const user = req.user;
-        if (!user) return res.status(401).json({ success: false, message: 'Unauthorized' });
-        res.json({ success: true, data: user });
+
+        if (!user) {
+            return res
+                .status(401)
+                .json({ success: false, message: 'Not authenticated' });
+        }
+
+        res.json({
+            success: true,
+            result: user,
+        });
     } catch (error) {
-        res.status(500).json({ success: false, message: 'Server error', error: error.message });
+        res.status(500).json({
+            success: false,
+            message: 'Server error',
+            error: error.message,
+        });
     }
 };
 
-export { register, login, getMe };
+export { register, login, checkAuth };
